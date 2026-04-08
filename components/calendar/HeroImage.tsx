@@ -13,7 +13,6 @@ export function HeroImage({ currentDate }: HeroImageProps) {
   const [imgSrc, setImgSrc] = useState(MONTH_IMAGES[month]);
   const [fade, setFade] = useState(false);
 
-  // Animate the image change crossfade
   useEffect(() => {
     setFade(true);
     const timer = setTimeout(() => {
@@ -24,10 +23,7 @@ export function HeroImage({ currentDate }: HeroImageProps) {
   }, [month]);
 
   return (
-    <div className="relative w-full h-64 sm:h-auto sm:min-h-full sm:flex-grow overflow-hidden flex flex-col">
-      {/* Spiral Binding Overlay for the Image Component Portion */}
-      <div className="absolute top-0 left-0 right-0 z-20 spiral-binding"></div>
-      
+    <div className="relative w-full overflow-hidden bg-gray-200" style={{ aspectRatio: '16 / 9' }}>
       {/* Main Image */}
       <img
         src={imgSrc}
@@ -35,15 +31,18 @@ export function HeroImage({ currentDate }: HeroImageProps) {
         className={`object-cover w-full h-full absolute inset-0 hero-image-transition ${fade ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
       />
       
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+      {/* Gradient overlay at bottom for legibility */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
 
-      {/* Decorative Text Banner */}
-      <div 
-        className="absolute bottom-4 right-0 z-10 bg-blue-600 text-white pl-6 pr-4 py-2 shadow-2xl flex flex-col items-end transform translate-x-1" 
-        style={{ clipPath: 'polygon(15% 0, 100% 0, 100% 100%, 0% 100%)' }}
-      >
-        <span className="text-xs font-bold tracking-[0.2em] uppercase opacity-90 drop-shadow-sm">{year}</span>
-        <span className="text-2xl lg:text-3xl font-black uppercase tracking-widest drop-shadow-md">{monthName}</span>
+      {/* Diagonal blue banner — matches the physical calendar reference */}
+      <svg className="absolute bottom-0 right-0 w-[320px] h-[120px] sm:w-[400px] sm:h-[140px]" viewBox="0 0 400 140" preserveAspectRatio="none">
+        <polygon points="100,0 400,0 400,140 0,140" fill="#2563eb" />
+      </svg>
+      
+      {/* Month + Year text on the banner */}
+      <div className="absolute bottom-4 right-6 sm:bottom-6 sm:right-8 z-10 text-right">
+        <div className="text-white/80 text-sm sm:text-base font-bold tracking-[0.3em]">{year}</div>
+        <div className="text-white text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-widest leading-none">{monthName}</div>
       </div>
     </div>
   );
