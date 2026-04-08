@@ -20,7 +20,7 @@ function SpiralBinding() {
 
 export function CalendarShell() {
   const { currentMonthDate, nextMonth, prevMonth, days } = useCalendar();
-  const { startDate, endDate, handleDateClick, isInRange, isStart, isEnd, isSingle } = useRangeSelect();
+  const { startDate, endDate, handleDateClick, isInRange, isStart, isEnd, isSingle, clearSelection } = useRangeSelect();
   const { notes, addNote, deleteNote, isLoaded } = useNotes();
 
   // Page-flip animation state
@@ -38,6 +38,8 @@ export function CalendarShell() {
       // Phase 2: Swap content while hidden
       if (direction === 'next') nextMonth();
       else prevMonth();
+      
+      clearSelection(); // <--- Invalidates state to mimic fresh physical page
       
       // Phase 3: Flip in from the correct direction (300ms)
       setFlipClass(`page-flip-in-${direction}`);
