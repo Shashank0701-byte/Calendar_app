@@ -1,0 +1,83 @@
+/* Calendar Root Variables */
+:root {
+  --cal-accent: #3b82f6; /* Blue chosen as primary theme accent */
+  --cal-accent-hover: #2563eb;
+  --cal-bg: #ffffff;
+  --cal-border: #e5e7eb;
+  --cal-text-main: #111827;
+  --cal-text-muted: #9ca3af;
+  --cal-bg-muted: #f9fafb;
+}
+
+/* Base calendar wrapper */
+.calendar-wrapper {
+  background: var(--cal-bg);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+/* Spiral Binding Effect */
+.spiral-binding {
+  height: 24px;
+  background-image: radial-gradient(circle at 10px 12px, #374151 4px, transparent 5px),
+                    linear-gradient(to bottom, transparent 10px, #d1d5db 10px, #d1d5db 14px, transparent 14px);
+  background-size: 20px 24px;
+  background-repeat: repeat-x;
+  border-bottom: 1px solid var(--cal-border);
+}
+
+/* Day Visual States */
+.day--default {
+  color: var(--cal-text-main);
+}
+
+.day--overflow {
+  color: var(--cal-text-muted);
+  background-color: var(--cal-bg-muted);
+}
+
+.day--weekend {
+  color: #ef4444; /* Subtle red for weekends */
+}
+
+/* Selection classes */
+.day--start, .day--end, .day--single {
+  background-color: var(--cal-accent);
+  color: white;
+  border-radius: 9999px; /* full rounded */
+}
+
+.day--in-range {
+  background-color: #dbeafe; /* soft blue fill */
+  color: var(--cal-accent-hover);
+}
+
+/* 'Today' ring indicator */
+.day--today {
+  border: 2px solid var(--cal-accent);
+  border-radius: 9999px;
+  font-weight: bold;
+}
+
+/* Active overrides to keep today clear when inside a range */
+.day--in-range.day--today {
+  border-color: var(--cal-accent-hover);
+}
+
+/* Interactions */
+@media (prefers-reduced-motion: no-preference) {
+  .day-cell {
+    transition: transform 100ms ease-in-out, background-color 150ms ease, box-shadow 100ms ease;
+  }
+  
+  .hero-image-transition {
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+}
+
+.day-cell:hover:not(:disabled) {
+  transform: scale(1.08); /* slight pop on hover */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
