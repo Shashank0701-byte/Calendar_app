@@ -23,7 +23,7 @@ export function HeroImage({ currentDate }: HeroImageProps) {
   }, [month]);
 
   return (
-    <div className="relative w-full overflow-hidden bg-gray-200" style={{ aspectRatio: '16 / 9' }}>
+    <div className="relative w-full overflow-hidden bg-gray-200 aspect-[16/9] sm:aspect-[21/9] lg:aspect-[2.5/1]">
       {/* Main Image */}
       <img
         src={imgSrc}

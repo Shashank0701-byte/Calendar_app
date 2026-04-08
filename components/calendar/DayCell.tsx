@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CalendarDay } from './useCalendar';
 
 interface DayCellProps {
@@ -42,6 +42,38 @@ export function DayCell({
     }
   }, [hasNote, showCircle, isErasing]);
 
+  // Mobile Long-Press Logic
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [longPressFired, setLongPressFired] = useState(false);
+
+  const handleTouchStart = () => {
+    setLongPressFired(false);
+    timerRef.current = setTimeout(() => {
+      onClick(day.isoString, true);
+      setLongPressFired(true);
+      timerRef.current = null;
+      if (typeof window !== 'undefined' && window.navigator.vibrate) {
+        window.navigator.vibrate(50);
+      }
+    }, 500);
+  };
+
+  const handleTouchEnd = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (longPressFired) {
+      setLongPressFired(false);
+      e.preventDefault();
+      return;
+    }
+    onClick(day.isoString, e.shiftKey);
+  };
+
   // Compute classes based on visual states defined in skills mapping
   const classes = [
     'day-cell', 
@@ -76,8 +108,11 @@ export function DayCell({
   return (
     <button
       key={monthKey}
-      onClick={(e) => onClick(day.isoString, e.shiftKey)}
-      className={`${classes.join(' ')} day-cell-enter relative`}
+      onClick={handleClick}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+      className={`${classes.join(' ')} day-cell-enter relative context-menu-none select-none`}
       style={{ '--stagger-delay': `${staggerIndex * 15}ms` } as React.CSSProperties}
       aria-label={label}
       aria-pressed={isStart || isEnd || isSingle}

@@ -93,8 +93,9 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holida
             </div>
           </div>
         ) : (
-          <div className="bg-white p-4 text-center border-dashed border-2 border-gray-200 rounded-xl text-gray-400 text-sm font-medium">
-            Select a date range to add notes
+          <div className="flex flex-col items-center justify-center h-24 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50">
+            <p className="text-sm font-medium text-gray-400">Select a date to view notes</p>
+            <p className="text-xs text-gray-400 mt-1 px-4 text-center">Shift+Click (or Long-press) to select a range</p>
           </div>
         )}
       </div>
@@ -118,7 +119,7 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holida
                  <button
                    onClick={() => handleDelete(note.id)}
                    disabled={crumplingIds.includes(note.id)}
-                   className="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md hover:bg-red-50 focus:opacity-100 disabled:opacity-0"
+                   className="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md hover:bg-red-50 focus:opacity-100 disabled:opacity-0"
                    aria-label="Delete note"
                  >
                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
