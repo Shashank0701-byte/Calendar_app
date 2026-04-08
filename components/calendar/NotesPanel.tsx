@@ -5,12 +5,26 @@ interface NotesPanelProps {
   notes: Note[];
   startDate: string | null;
   endDate: string | null;
+  currentMonthDate: Date;
   onAddNote: (start: string, end: string | null, text: string) => void;
   onDeleteNote: (id: string) => void;
 }
 
-export function NotesPanel({ notes, startDate, endDate, onAddNote, onDeleteNote }: NotesPanelProps) {
+export function NotesPanel({ notes, startDate, endDate, currentMonthDate, onAddNote, onDeleteNote }: NotesPanelProps) {
   const [text, setText] = useState('');
+
+  // Filter notes to only show ones overlapping the current month
+  const currentMonth = currentMonthDate.getMonth();
+  const currentYear = currentMonthDate.getFullYear();
+  const monthStart = new Date(currentYear, currentMonth, 1);
+  const monthEnd = new Date(currentYear, currentMonth + 1, 0); // last day of month
+
+  const filteredNotes = notes.filter(note => {
+    const noteStart = new Date(note.startDate);
+    const noteEnd = new Date(note.endDate);
+    // Note overlaps current month if it starts before month ends AND ends after month starts
+    return noteStart <= monthEnd && noteEnd >= monthStart;
+  });
 
   const handleSave = () => {
     if (!startDate || !text.trim()) return;
@@ -72,11 +86,11 @@ export function NotesPanel({ notes, startDate, endDate, onAddNote, onDeleteNote 
           Saved Selection Notes
         </h4>
         
-        {notes.length === 0 ? (
-          <p className="text-xs text-gray-400 italic">No notes yet. Data saved locally.</p>
+        {filteredNotes.length === 0 ? (
+          <p className="text-xs text-gray-400 italic">No notes for this month.</p>
         ) : (
            <div className="flex flex-col gap-3">
-            {notes.map(note => (
+            {filteredNotes.map(note => (
               <div key={note.id} className="group relative bg-white p-3.5 pb-7 rounded-xl shadow-sm border border-gray-200 hover:border-blue-200 transition-colors w-full break-words">
                  <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                    {getRangeLabel(note.startDate, note.endDate)}

@@ -51,6 +51,7 @@ export function CalendarShell() {
               notes={notes}
               startDate={startDate}
               endDate={endDate}
+              currentMonthDate={currentMonthDate}
               onAddNote={addNote}
               onDeleteNote={deleteNote}
             />
