@@ -44,6 +44,7 @@ User notes are persisted entirely client-side using `localStorage`. This removes
   - **3D Page Peel & Stagger**: Directional navigation (next/prev month) triggers unique `rotateX` CSS keyframes mimicking a page peeling back or flipping up, paired with a custom `stagger-delay` inline CSS cascade fading in day cells instantly.
 
 ### 4. Accessibility and UX
+- **Responsive Date Range Selection**: The application natively supports multi-day range selection using tailored device physics. On desktop, users can utilize standard `Shift+Click` mechanics to extend a selection. On mobile touch interfaces (where shift keys don't exist), this is handled via a dedicated `onTouchStart/End` custom event hook that listens for a 500ms **Long-Press** on a given date to seamlessly extend the range, matching native OS expectations.
 - Focus states and `aria-labels` are actively applied across the calendar components.
 - Keyboard navigation is supported globally via `ArrowLeft` and `ArrowRight` event listeners to quickly traverse through months.
 - Added `prefers-reduced-motion` fallbacks across all custom CSS animations to respect user system accessibility preferences.
