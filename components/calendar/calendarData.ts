@@ -7,7 +7,7 @@ export const MONTH_IMAGES: string[] = [
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop", // Jun - Beach
   "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=1200&auto=format&fit=crop", // Jul - Sunset ocean
   "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1200&auto=format&fit=crop", // Aug - Mountain nature
-  "https://images.unsplash.com/photo-1505193382332-c6b06ab8ac68?q=80&w=1200&auto=format&fit=crop", // Sep - Early autumn
+  "https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=1200&auto=format&fit=crop", // Sep - Early autumn
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop", // Oct - Fall landscape
   "https://images.unsplash.com/photo-1477468572316-36979010099d?q=80&w=1200&auto=format&fit=crop", // Nov - Late autumn
   "https://images.unsplash.com/photo-1482442120256-9c03866de390?q=80&w=1200&auto=format&fit=crop", // Dec - Holiday winter

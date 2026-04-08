@@ -10,17 +10,7 @@ export function HeroImage({ currentDate }: HeroImageProps) {
   const year = currentDate.getFullYear();
   const monthName = currentDate.toLocaleString('default', { month: 'long' });
   
-  const [imgSrc, setImgSrc] = useState(MONTH_IMAGES[month]);
-  const [fade, setFade] = useState(false);
-
-  useEffect(() => {
-    setFade(true);
-    const timer = setTimeout(() => {
-      setImgSrc(MONTH_IMAGES[month]);
-      setFade(false);
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [month]);
+  const imgSrc = MONTH_IMAGES[month];
 
   return (
     <div className="relative w-full overflow-hidden bg-gray-200 aspect-[16/9] sm:aspect-[21/9] lg:aspect-[2.5/1]">
@@ -28,7 +18,7 @@ export function HeroImage({ currentDate }: HeroImageProps) {
       <img
         src={imgSrc}
         alt={`${monthName} calendar hero artwork`}
-        className={`object-cover w-full h-full absolute inset-0 hero-image-transition ${fade ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
+        className="object-cover w-full h-full absolute inset-0 hero-image-transition"
       />
       
       {/* Gradient overlay at bottom for legibility */}
