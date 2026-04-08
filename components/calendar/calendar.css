@@ -12,13 +12,16 @@
 /* ===== Calendar Wrapper: Wall calendar "page" look ===== */
 .calendar-wrapper {
   background: var(--cal-bg);
+  /* Dynamic shadow shifting based on mouse */
   box-shadow:
-    0 20px 40px -10px rgba(0, 0, 0, 0.15),
-    0 8px 16px -8px rgba(0, 0, 0, 0.1);
+    calc(var(--mouse-x, 0) * -15px) calc(var(--mouse-y, 0) * -15px + 20px) 40px -10px rgba(0, 0, 0, 0.15),
+    calc(var(--mouse-x, 0) * -5px) calc(var(--mouse-y, 0) * -5px + 8px) 16px -8px rgba(0, 0, 0, 0.1);
   border-radius: 0 0 0.5rem 0.5rem;
   overflow: hidden;
-  /* Slight tilt for a wall hanging effect */
-  transform: perspective(1200px) rotateX(1deg);
+  /* Dynamic tilt tracking mouse */
+  transform: perspective(1500px) rotateX(calc(var(--mouse-y, 0) * -2deg + 1deg)) rotateY(calc(var(--mouse-x, 0) * 2deg));
+  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+  will-change: transform, box-shadow;
 }
 
 /* ===== Spiral Binding Rings ===== */
@@ -39,7 +42,13 @@
   height: 18px;
   border: 3px solid #6b7280;
   border-radius: 50%;
-  background: linear-gradient(135deg, #9ca3af, #d1d5db);
+  /* Gleam uses mouse-x mapped to 0..100% */
+  background: radial-gradient(
+    circle at calc(50% + var(--mouse-x, 0) * 50%) calc(50% + var(--mouse-y, 0) * 50%),
+    #ffffff 0%,
+    #d1d5db 40%,
+    #9ca3af 100%
+  );
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 1px 1px rgba(255,255,255,0.3);
   flex-shrink: 0;
 }

@@ -64,6 +64,26 @@ export function CalendarShell() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNavigate]);
 
+  // 3D Mouse Parallax Tracking
+  const calendarRef = useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!calendarRef.current) return;
+      const rect = calendarRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      
+      // Normalize to -1 to 1 range, clamped
+      const clampX = Math.max(-1, Math.min(1, x / (rect.width / 2)));
+      const clampY = Math.max(-1, Math.min(1, y / (rect.height / 2)));
+
+      calendarRef.current.style.setProperty('--mouse-x', clampX.toString());
+      calendarRef.current.style.setProperty('--mouse-y', clampY.toString());
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   if (!isLoaded) {
     return <div className="min-h-screen flex items-center justify-center text-gray-400">Loading Calendar...</div>;
   }
@@ -75,7 +95,7 @@ export function CalendarShell() {
       <div className="wall-hook"></div>
 
       {/* The Calendar "Page" */}
-      <div className="calendar-wrapper w-full">
+      <div ref={calendarRef} className="calendar-wrapper w-full relative">
         
         {/* Spiral Binding Rings — stays fixed during flip */}
         <SpiralBinding />
