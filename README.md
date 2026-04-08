@@ -2,6 +2,10 @@
 
 A responsive, physical-style wall calendar application built with Next.js, React, and Tailwind CSS. The project deliberately avoids external date manipulation libraries (like date-fns or moment.js) in favor of the native JavaScript `Date` and `Intl` APIs to minimize bundle size and demonstrate core engineering fundamentals.
 
+## 🔗 Quick Links
+- **Live Deployment**: [calendar-app-pi-plum.vercel.app](https://calendar-app-pi-plum.vercel.app)
+- **🎥 Demo Video**: **[Watch the fully interactive video walkthrough here](https://www.youtube.com/watch?v=1a-XKQUA9B8)**
+
 ## How to Run Locally
 
 ### Prerequisites
@@ -42,6 +46,7 @@ User notes are persisted entirely client-side using `localStorage`. This removes
   - **Hand-Drawn SVG Markers**: Active notes and dates receive red circle markers dynamically. Using `svg` properties (`stroke-dasharray`, `stroke-dashoffset`), the marker simulates being fully hand-drawn in real-time, and erases backwards conditionally when removed.
   - **Physics-Based UI Deletions**: Deleting a note collapses the digital card inwards along scaled axes (`scaleX/Y` and `rotate`) to mimic crumpled paper, translating rapidly down to intersect with a dynamically rendered pop-up dustbin. 
   - **3D Page Peel & Stagger**: Directional navigation (next/prev month) triggers unique `rotateX` CSS keyframes mimicking a page peeling back or flipping up, paired with a custom `stagger-delay` inline CSS cascade fading in day cells instantly.
+
 
 ### 4. Accessibility and UX
 - **Contextual State Invalidation**: To maintain the skeuomorphic mental model of a physical wall calendar, navigating to a new month actively triggers a React state invalidation process that wipes the current date selection (`clearSelection()`). This ensures users aren't incorrectly presented with previous-page data on a newly flipped physical page—a minor but critical UX edge-case.
