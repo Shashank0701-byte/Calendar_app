@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Interactive Wall Calendar
 
-## Getting Started
+A responsive, physical-style wall calendar application built with Next.js, React, and Tailwind CSS. The project deliberately avoids external date manipulation libraries (like date-fns or moment.js) in favor of the native JavaScript `Date` and `Intl` APIs to minimize bundle size and demonstrate core engineering fundamentals.
 
-First, run the development server:
+## How to Run Locally
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
+- Node.js (version 18 or higher recommended)
+- npm or yarn
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Setup Instructions
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
 
-## Learn More
+3. **View the application:**
+   Open your browser and navigate to `http://localhost:3000` (or the port specified in your terminal if 3000 is occupied).
 
-To learn more about Next.js, take a look at the following resources:
+## Implementation Architecture & Choices
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 1. Separation of Concerns (Custom Hooks)
+The business logic is cleanly separated from the UI components using three primary custom React hooks:
+- **`useCalendar.ts`**: Handles core date math, generating the 42-day grid (6 weeks), processing overflow days from adjacent months, and managing month-to-month navigation.
+- **`useRangeSelect.ts`**: Manages the selection state. Adapted a Shift+Click logic to allow users to either single-click a date flawlessly, or extend a range using shift.
+- **`useNotes.ts`**: Handles CRUD operations and persistence of user notes via browser `localStorage`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. State Persistence
+User notes are persisted entirely client-side using `localStorage`. This removes the need for a backend database during this phase while ensuring user data survives page refreshes.
 
-## Deploy on Vercel
+### 3. Styling and Theming
+- **Tailwind CSS**: Used for structural layout, responsiveness, and basic typography. A mobile-first approach ensures the calendar stacks vertically on small screens and expands to a side-by-side layout on desktop.
+- **Custom CSS / Variables**: Found in `calendar.css`, custom CSS variables and pseudo-elements were used to create heavy visual styling like the spiral binding, wall hooks, and lined paper.
+- **Animations**: Implemented via pure CSS keyframes (`transform` and `opacity`) to ensure smooth, hardware-accelerated performance without third-party animation libraries. This covers the page-flip transition, the staggered day-cell cascade, and note slide-ins.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. Accessibility and UX
+- Focus states and `aria-labels` are actively applied across the calendar components.
+- Keyboard navigation is supported globally via `ArrowLeft` and `ArrowRight` event listeners to quickly traverse through months.
+- Added `prefers-reduced-motion` fallbacks across all custom CSS animations to respect user system accessibility preferences.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 5. Content Design
+A comprehensive `HOLIDAYS` mapping object is embedded in the application covering Indian festivals and national holidays (2025-2027) dynamically rendering color-coded indicators when a date correlates with a holiday. Unsplash assets are statically mapped per-month to mimic the thematic imagery of a physical hanging calendar.
