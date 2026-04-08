@@ -130,3 +130,68 @@
   );
   background-position: 0 8px;
 }
+
+/* ===== Page Flip Animation ===== */
+.page-flip-container {
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+.page-content {
+  transform-origin: top center;
+  backface-visibility: hidden;
+}
+
+/* FORWARD (next month): page lifts UP and over the top */
+@keyframes flipOutForward {
+  0%   { transform: rotateX(0deg);    opacity: 1; }
+  100% { transform: rotateX(-90deg);  opacity: 0; }
+}
+
+@keyframes flipInForward {
+  0%   { transform: rotateX(90deg);   opacity: 0; }
+  100% { transform: rotateX(0deg);    opacity: 1; }
+}
+
+/* BACKWARD (prev month): page peels back DOWN from behind the top */
+@keyframes flipOutBackward {
+  0%   { transform: rotateX(0deg);    opacity: 1; }
+  100% { transform: rotateX(90deg);   opacity: 0; }
+}
+
+@keyframes flipInBackward {
+  0%   { transform: rotateX(-90deg);  opacity: 0; }
+  100% { transform: rotateX(0deg);    opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page-flip-out-next {
+    animation: flipOutForward 250ms ease-in forwards;
+  }
+  .page-flip-in-next {
+    animation: flipInForward 300ms ease-out forwards;
+  }
+  .page-flip-out-prev {
+    animation: flipOutBackward 250ms ease-in forwards;
+  }
+  .page-flip-in-prev {
+    animation: flipInBackward 300ms ease-out forwards;
+  }
+}
+
+/* Fallback for reduced motion — simple fade */
+@media (prefers-reduced-motion: reduce) {
+  .page-flip-out-next,
+  .page-flip-out-prev {
+    animation: none;
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+  .page-flip-in-next,
+  .page-flip-in-prev {
+    animation: none;
+    opacity: 1;
+    transition: opacity 150ms ease;
+  }
+}
+
