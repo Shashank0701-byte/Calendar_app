@@ -5,6 +5,7 @@ import { WEEK_DAYS, HOLIDAYS } from './calendarData';
 
 interface CalendarGridProps {
   days: CalendarDay[];
+  monthKey: string;
   handleDateClick: (iso: string, shiftKey: boolean) => void;
   isInRange: (iso: string) => boolean;
   isStart: (iso: string) => boolean;
@@ -14,6 +15,7 @@ interface CalendarGridProps {
 
 export function CalendarGrid({
   days,
+  monthKey,
   handleDateClick,
   isInRange,
   isStart,
@@ -38,6 +40,8 @@ export function CalendarGrid({
             <DayCell
               key={`${day.isoString}-${idx}`}
               day={day}
+              staggerIndex={idx}
+              monthKey={monthKey}
               isStart={isStart(day.isoString)}
               isEnd={isEnd(day.isoString)}
               isInRange={isInRange(day.isoString)}

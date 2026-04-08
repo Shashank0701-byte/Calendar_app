@@ -7,6 +7,8 @@ interface DayCellProps {
   isEnd: boolean;
   isInRange: boolean;
   isSingle: boolean;
+  staggerIndex: number;
+  monthKey: string;
   onClick: (dateStr: string, shiftKey: boolean) => void;
   holidayName?: string;
 }
@@ -17,6 +19,8 @@ export function DayCell({
   isEnd,
   isInRange,
   isSingle,
+  staggerIndex,
+  monthKey,
   onClick,
   holidayName
 }: DayCellProps) {
@@ -53,8 +57,10 @@ export function DayCell({
 
   return (
     <button
+      key={monthKey}
       onClick={(e) => onClick(day.isoString, e.shiftKey)}
-      className={classes.join(' ')}
+      className={`${classes.join(' ')} day-cell-enter`}
+      style={{ '--stagger-delay': `${staggerIndex * 15}ms` } as React.CSSProperties}
       aria-label={label}
       aria-pressed={isStart || isEnd || isSingle}
       title={holidayName || label}

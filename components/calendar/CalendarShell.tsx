@@ -52,6 +52,18 @@ export function CalendarShell() {
 
   const selectedHoliday = startDate ? HOLIDAYS[startDate] : undefined;
 
+  // Global Keyboard Navigation for Month Switching
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in the notes textarea
+      if (document.activeElement?.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowLeft') handleNavigate('prev');
+      else if (e.key === 'ArrowRight') handleNavigate('next');
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleNavigate]);
+
   if (!isLoaded) {
     return <div className="min-h-screen flex items-center justify-center text-gray-400">Loading Calendar...</div>;
   }
@@ -100,6 +112,7 @@ export function CalendarShell() {
                 />
                 <CalendarGrid
                   days={days}
+                  monthKey={`${currentMonthDate.getFullYear()}-${currentMonthDate.getMonth()}`}
                   handleDateClick={handleDateClick}
                   isInRange={isInRange}
                   isStart={isStart}

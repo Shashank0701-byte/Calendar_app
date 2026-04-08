@@ -13,6 +13,7 @@ interface NotesPanelProps {
 
 export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holidayName, onAddNote, onDeleteNote }: NotesPanelProps) {
   const [text, setText] = useState('');
+  const [justSaved, setJustSaved] = useState(false);
 
   // Filter notes to only show ones overlapping the current month
   const currentMonth = currentMonthDate.getMonth();
@@ -31,6 +32,8 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holida
     if (!startDate || !text.trim()) return;
     onAddNote(startDate, endDate, text);
     setText('');
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 700);
   };
 
   const getRangeLabel = (start: string, end: string | null) => {
@@ -52,7 +55,7 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holida
         </h3>
         
         {startDate ? (
-          <div className="bg-white p-3.5 rounded-xl shadow-sm border border-gray-200">
+          <div key={startDate} className="bg-white p-3.5 rounded-xl shadow-sm border border-gray-200 notes-input-enter">
             <label className="block text-xs font-bold text-blue-600 uppercase tracking-widest mb-1">
               {getRangeLabel(startDate, endDate)}
             </label>
@@ -74,9 +77,9 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holida
               <button
                 onClick={handleSave}
                 disabled={!text.trim()}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-lg transition-colors"
+                className={`bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-lg transition-colors ${justSaved ? 'save-flash' : ''}`}
               >
-                Save
+                {justSaved ? '✓ Saved' : 'Save'}
               </button>
             </div>
           </div>
@@ -98,7 +101,7 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holida
         ) : (
            <div className="flex flex-col gap-3">
             {filteredNotes.map(note => (
-              <div key={note.id} className="group relative bg-white p-3.5 pb-7 rounded-xl shadow-sm border border-gray-200 hover:border-blue-200 transition-colors w-full break-words">
+              <div key={note.id} className="group relative bg-white p-3.5 pb-7 rounded-xl shadow-sm border border-gray-200 hover:border-blue-200 transition-colors w-full break-words note-card-enter">
                  <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                    {getRangeLabel(note.startDate, note.endDate)}
                  </div>
