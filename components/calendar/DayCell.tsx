@@ -7,7 +7,7 @@ interface DayCellProps {
   isEnd: boolean;
   isInRange: boolean;
   isSingle: boolean;
-  onClick: (dateStr: string) => void;
+  onClick: (dateStr: string, shiftKey: boolean) => void;
   holidayName?: string;
 }
 
@@ -53,7 +53,7 @@ export function DayCell({
 
   return (
     <button
-      onClick={() => onClick(day.isoString)}
+      onClick={(e) => onClick(day.isoString, e.shiftKey)}
       className={classes.join(' ')}
       aria-label={label}
       aria-pressed={isStart || isEnd || isSingle}

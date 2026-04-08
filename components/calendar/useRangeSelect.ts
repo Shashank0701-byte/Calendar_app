@@ -4,28 +4,20 @@ export function useRangeSelect() {
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
 
-  const handleDateClick = useCallback((dateIso: string) => {
-    // Stage 1: No dates selected -> Set Start
-    if (!startDate) {
-      setStartDate(dateIso);
-      setEndDate(null);
-      return;
-    }
-
-    // Stage 2: Start is set, End is not set
-    if (startDate && !endDate) {
-      // If user clicked backward, reset selection to start at the new date
+  const handleDateClick = useCallback((dateIso: string, shiftKey: boolean) => {
+    // Shift+Click = extend to range from current start
+    if (shiftKey && startDate && !endDate) {
       if (new Date(dateIso) < new Date(startDate)) {
+        // Clicked before start — make this the new start, old start becomes end
+        setEndDate(startDate);
         setStartDate(dateIso);
-        setEndDate(null);
-      } else {
-        // Correct forward click -> setEnd
+      } else if (dateIso !== startDate) {
         setEndDate(dateIso);
       }
       return;
     }
 
-    // Stage 3: Both are set -> Reset and start over
+    // Normal click = always select just that single date
     setStartDate(dateIso);
     setEndDate(null);
   }, [startDate, endDate]);
@@ -39,8 +31,10 @@ export function useRangeSelect() {
   
   const isEnd = useCallback((dateIso: string) => dateIso === endDate, [endDate]);
   
-  // single day range selection check (start and end clicked on the same date)
-  const isSingle = useCallback((dateIso: string) => isStart(dateIso) && isEnd(dateIso), [isStart, isEnd]);
+  const isSingle = useCallback(
+    (dateIso: string) => dateIso === startDate && !endDate,
+    [startDate, endDate]
+  );
 
   const clearSelection = useCallback(() => {
     setStartDate(null);

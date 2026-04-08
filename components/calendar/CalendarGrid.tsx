@@ -5,7 +5,7 @@ import { WEEK_DAYS, HOLIDAYS } from './calendarData';
 
 interface CalendarGridProps {
   days: CalendarDay[];
-  handleDateClick: (iso: string) => void;
+  handleDateClick: (iso: string, shiftKey: boolean) => void;
   isInRange: (iso: string) => boolean;
   isStart: (iso: string) => boolean;
   isEnd: (iso: string) => boolean;

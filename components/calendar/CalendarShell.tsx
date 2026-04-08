@@ -8,6 +8,7 @@ import { HeroImage } from './HeroImage';
 import { CalendarHeader } from './CalendarHeader';
 import { CalendarGrid } from './CalendarGrid';
 import { NotesPanel } from './NotesPanel';
+import { HOLIDAYS } from './calendarData';
 import './calendar.css';
 
 function SpiralBinding() {
@@ -22,6 +23,9 @@ export function CalendarShell() {
   const { currentMonthDate, nextMonth, prevMonth, days } = useCalendar();
   const { startDate, endDate, handleDateClick, isInRange, isStart, isEnd, isSingle } = useRangeSelect();
   const { notes, addNote, deleteNote, isLoaded } = useNotes();
+
+  // Look up holiday for the currently selected start date
+  const selectedHoliday = startDate ? HOLIDAYS[startDate] : undefined;
 
   if (!isLoaded) {
     return <div className="min-h-screen flex items-center justify-center text-gray-400">Loading Calendar...</div>;
@@ -52,6 +56,7 @@ export function CalendarShell() {
               startDate={startDate}
               endDate={endDate}
               currentMonthDate={currentMonthDate}
+              holidayName={selectedHoliday}
               onAddNote={addNote}
               onDeleteNote={deleteNote}
             />

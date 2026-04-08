@@ -6,11 +6,12 @@ interface NotesPanelProps {
   startDate: string | null;
   endDate: string | null;
   currentMonthDate: Date;
+  holidayName?: string;
   onAddNote: (start: string, end: string | null, text: string) => void;
   onDeleteNote: (id: string) => void;
 }
 
-export function NotesPanel({ notes, startDate, endDate, currentMonthDate, onAddNote, onDeleteNote }: NotesPanelProps) {
+export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holidayName, onAddNote, onDeleteNote }: NotesPanelProps) {
   const [text, setText] = useState('');
 
   // Filter notes to only show ones overlapping the current month
@@ -52,9 +53,15 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, onAddN
         
         {startDate ? (
           <div className="bg-white p-3.5 rounded-xl shadow-sm border border-gray-200">
-            <label className="block text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">
+            <label className="block text-xs font-bold text-blue-600 uppercase tracking-widest mb-1">
               {getRangeLabel(startDate, endDate)}
             </label>
+            {holidayName && (
+              <div className="flex items-center gap-1.5 mb-2 px-2 py-1 bg-red-50 border border-red-100 rounded-lg">
+                <span className="w-2 h-2 rounded-full bg-red-400 flex-shrink-0"></span>
+                <span className="text-xs font-semibold text-red-600">{holidayName}</span>
+              </div>
+            )}
             <textarea
               className="w-full resize-none bg-transparent outline-none text-gray-700 placeholder-gray-400 text-sm"
               rows={3}
