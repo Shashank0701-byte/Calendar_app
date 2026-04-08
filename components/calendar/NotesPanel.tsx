@@ -14,6 +14,7 @@ interface NotesPanelProps {
 export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holidayName, onAddNote, onDeleteNote }: NotesPanelProps) {
   const [text, setText] = useState('');
   const [justSaved, setJustSaved] = useState(false);
+  const [crumplingIds, setCrumplingIds] = useState<string[]>([]);
 
   // Filter notes to only show ones overlapping the current month
   const currentMonth = currentMonthDate.getMonth();
@@ -34,6 +35,14 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holida
     setText('');
     setJustSaved(true);
     setTimeout(() => setJustSaved(false), 700);
+  };
+
+  const handleDelete = (id: string) => {
+    setCrumplingIds(prev => [...prev, id]);
+    setTimeout(() => {
+      onDeleteNote(id);
+      setCrumplingIds(prev => prev.filter(cId => cId !== id));
+    }, 1000); // Matches CSS animation duration
   };
 
   const getRangeLabel = (start: string, end: string | null) => {
@@ -101,14 +110,15 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holida
         ) : (
            <div className="flex flex-col gap-3">
             {filteredNotes.map(note => (
-              <div key={note.id} className="group relative bg-white p-3.5 pb-7 rounded-xl shadow-sm border border-gray-200 hover:border-blue-200 transition-colors w-full break-words note-card-enter">
+              <div key={note.id} className={`group relative bg-white p-3.5 pb-7 rounded-xl shadow-sm border border-gray-200 hover:border-blue-200 transition-colors w-full break-words note-card-enter ${crumplingIds.includes(note.id) ? 'crumple-delete' : ''}`}>
                  <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                    {getRangeLabel(note.startDate, note.endDate)}
                  </div>
                  <p className="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">{note.text}</p>
                  <button
-                   onClick={() => onDeleteNote(note.id)}
-                   className="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md hover:bg-red-50 focus:opacity-100"
+                   onClick={() => handleDelete(note.id)}
+                   disabled={crumplingIds.includes(note.id)}
+                   className="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md hover:bg-red-50 focus:opacity-100 disabled:opacity-0"
                    aria-label="Delete note"
                  >
                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -120,6 +130,18 @@ export function NotesPanel({ notes, startDate, endDate, currentMonthDate, holida
            </div>
         )}
       </div>
+
+      {/* Dynamic Dustbin for Crumpling Deletes */}
+      {crumplingIds.length > 0 && (
+        <div className="absolute bottom-6 left-6 dustbin-enter z-50 bg-gray-50 border border-gray-200 p-4 rounded-full shadow-lg">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="dustbin-icon">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6L17.2 20.4C17.1 21.3 16.3 22 15.4 22H8.6C7.7 22 6.9 21.3 6.8 20.4L5 6"></path>
+            <path d="M10 11v6M14 11v6"></path>
+            <path d="M9 6V4A1 1 0 0 1 10 3h4a1 1 0 0 1 1 1v2"></path>
+          </svg>
+        </div>
+      )}
     </div>
   );
 }
