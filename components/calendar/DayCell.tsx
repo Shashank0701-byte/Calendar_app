@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CalendarDay } from './useCalendar';
 
 interface DayCellProps {
@@ -7,6 +7,7 @@ interface DayCellProps {
   isEnd: boolean;
   isInRange: boolean;
   isSingle: boolean;
+  hasNote?: boolean;
   staggerIndex: number;
   monthKey: string;
   onClick: (dateStr: string, shiftKey: boolean) => void;
@@ -19,11 +20,28 @@ export function DayCell({
   isEnd,
   isInRange,
   isSingle,
+  hasNote = false,
   staggerIndex,
   monthKey,
   onClick,
   holidayName
 }: DayCellProps) {
+  const [showCircle, setShowCircle] = useState(hasNote);
+  const [isErasing, setIsErasing] = useState(false);
+
+  useEffect(() => {
+    if (hasNote && !showCircle) {
+      setShowCircle(true);
+      setIsErasing(false);
+    } else if (!hasNote && showCircle && !isErasing) {
+      setIsErasing(true);
+      setTimeout(() => {
+        setIsErasing(false);
+        setShowCircle(false);
+      }, 350);
+    }
+  }, [hasNote, showCircle, isErasing]);
+
   // Compute classes based on visual states defined in skills mapping
   const classes = [
     'day-cell', 
@@ -59,15 +77,32 @@ export function DayCell({
     <button
       key={monthKey}
       onClick={(e) => onClick(day.isoString, e.shiftKey)}
-      className={`${classes.join(' ')} day-cell-enter`}
+      className={`${classes.join(' ')} day-cell-enter relative`}
       style={{ '--stagger-delay': `${staggerIndex * 15}ms` } as React.CSSProperties}
       aria-label={label}
       aria-pressed={isStart || isEnd || isSingle}
       title={holidayName || label}
       disabled={day.isOverflow}
     >
-      <span className="z-10">{day.date.getDate()}</span>
-      {holidayName && !isStart && !isEnd && !isSingle && (
+      <span className="z-10 relative">{day.date.getDate()}</span>
+      
+      {/* Hand-drawn SVG marker */}
+      {(isSingle || showCircle || isErasing) && (
+        <svg className={`absolute inset-0 w-full h-full scale-[1.3] pointer-events-none ${hasNote || showCircle ? 'text-red-600' : 'text-blue-600'}`} viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path 
+            d="M 35,18 C 15,22 8,40 12,65 C 15,85 35,94 62,90 C 85,86 98,65 93,40 C 88,15 60,6 40,12 C 25,16 10,35 15,45"
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="4" 
+            strokeLinecap="round" 
+            vectorEffect="non-scaling-stroke"
+            className={isErasing ? 'erase-line' : 'hand-drawn-line'}
+            pathLength="1"
+          />
+        </svg>
+      )}
+
+      {holidayName && !isStart && !isEnd && !isSingle && !showCircle && (
         <span className="absolute bottom-1 w-1 h-1 rounded-full bg-red-400"></span>
       )}
     </button>

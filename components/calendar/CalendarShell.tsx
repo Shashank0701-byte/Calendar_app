@@ -52,6 +52,19 @@ export function CalendarShell() {
 
   const selectedHoliday = startDate ? HOLIDAYS[startDate] : undefined;
 
+  const hasNoteForDay = useCallback((iso: string) => {
+    return notes.some(n => {
+      const dayDate = new Date(iso);
+      dayDate.setHours(0, 0, 0, 0);
+      const start = new Date(n.startDate);
+      start.setHours(0, 0, 0, 0);
+      if (!n.endDate) return dayDate.getTime() === start.getTime();
+      const end = new Date(n.endDate);
+      end.setHours(0, 0, 0, 0);
+      return dayDate.getTime() >= start.getTime() && dayDate.getTime() <= end.getTime();
+    });
+  }, [notes]);
+
   // Global Keyboard Navigation for Month Switching
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -138,6 +151,7 @@ export function CalendarShell() {
                   isStart={isStart}
                   isEnd={isEnd}
                   isSingle={isSingle}
+                  hasNote={hasNoteForDay}
                 />
               </div>
               

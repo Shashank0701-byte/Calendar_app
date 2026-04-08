@@ -11,6 +11,7 @@ interface CalendarGridProps {
   isStart: (iso: string) => boolean;
   isEnd: (iso: string) => boolean;
   isSingle: (iso: string) => boolean;
+  hasNote: (iso: string) => boolean;
 }
 
 export function CalendarGrid({
@@ -20,7 +21,8 @@ export function CalendarGrid({
   isInRange,
   isStart,
   isEnd,
-  isSingle
+  isSingle,
+  hasNote
 }: CalendarGridProps) {
   return (
     <div className="p-4 sm:p-6 bg-white flex-grow">
@@ -46,6 +48,7 @@ export function CalendarGrid({
               isEnd={isEnd(day.isoString)}
               isInRange={isInRange(day.isoString)}
               isSingle={isSingle(day.isoString)}
+              hasNote={hasNote(day.isoString)}
               onClick={handleDateClick}
               holidayName={HOLIDAYS[day.isoString]}
             />
